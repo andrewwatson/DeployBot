@@ -70,6 +70,7 @@ func main() {
 		incomingToken := r.FormValue("token")
 		incomingChannel := r.FormValue("channel_name")
 		incomingTeam := r.FormValue("team_domain")
+		responseURL := r.FormValue("response_url")
 
 		log.Print("incoming request....")
 
@@ -103,7 +104,11 @@ func main() {
 
 		w.Header().Add("Content-type", "application/json")
 		tmpl.Execute(w, data)
-		log.Println("responded")
+		log.Println("responded immediately")
+
+		if responseURL != "" {
+			go performDeployment("AAAA", "staging", responseURL)
+		}
 
 		return
 

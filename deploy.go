@@ -11,6 +11,7 @@ import (
 
 func performDeployment(version string, environment string, responseURL string) ([]byte, error) {
 
+	log.Printf("Asked to respond to %s later", responseURL)
 	wakeUp := time.After(5 * time.Second)
 	<-wakeUp
 
