@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -58,6 +59,8 @@ func main() {
 		incomingChannel := r.FormValue("channel_name")
 		incomingTeam := r.FormValue("team_domain")
 
+		log.Print("incoming request....")
+
 		if incomingToken != slackToken {
 			http.Error(w, "BAD TOKEN", http.StatusUnauthorized)
 			return
@@ -73,6 +76,38 @@ func main() {
 			return
 		}
 
+		/*
+		   {
+		       "response_type": "in_channel",
+		       "text": "It's 80 degrees right now.",
+		       "attachments": [
+		           {
+		               "text":"Partly cloudy today and tomorrow"
+		           }
+		       ]
+		   }
+		*/
+
+		responseTemplate := `{
+    "response_type": "in_channel",
+    "text": "{{.Text}}",
+    "attachments": [
+        {
+            "text":"{{.Text}}"
+        }
+    ]
+}`
+
+		data := struct {
+			Text string
+		}{"Test"}
+		tmpl, err := template.New("json").Parse(responseTemplate)
+		if err != nil {
+			http.Error(w, "Template Problem", http.StatusInternalServerError)
+			return
+		}
+
+		tmpl.Execute(w, data)
 		w.Write([]byte("thanks\n"))
 
 		return
