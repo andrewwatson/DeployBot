@@ -67,6 +67,7 @@ func main() {
 		}
 
 		if slackChannel != incomingChannel {
+			log.Printf("Incoming Channel Wrong: %s", incomingChannel)
 			http.Error(w, "BAD CHANNEL", http.StatusForbidden)
 			return
 		}
@@ -107,8 +108,9 @@ func main() {
 			return
 		}
 
+		w.Header().Add("Content-type", "application/json")
 		tmpl.Execute(w, data)
-		w.Write([]byte("thanks\n"))
+		log.Println("responded")
 
 		return
 
