@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -9,17 +10,12 @@ import (
 	"time"
 )
 
-func performDeployment(version string, environment string, responseURL string) ([]byte, error) {
+func respondToSlack(responseURL string, message string) ([]byte, error) {
 
-	log.Printf("Asked to respond to %s later", responseURL)
-	wakeUp := time.After(5 * time.Second)
-	<-wakeUp
-
-	log.Print("i'm awake!")
 	data := struct {
 		Text           string
 		AttachmentText string
-	}{"test", "attachment text"}
+	}{"Deployment Result", message}
 	tmpl, err := template.New("json").Parse(responseTemplate)
 	if err != nil {
 		return nil, err
@@ -46,4 +42,16 @@ func performDeployment(version string, environment string, responseURL string) (
 	}
 
 	return body, nil
+
+}
+func performDeployment(version string, environment string, responseURL string) ([]byte, error) {
+
+	log.Printf("Asked to respond to %s later", responseURL)
+	wakeUp := time.After(20 * time.Second)
+	<-wakeUp
+
+	responseBody, err := respondToSlack(responseURL, fmt.Sprintf("Deployment of %s to %s Successful", version, environment))
+
+	return responseBody, err
+
 }
