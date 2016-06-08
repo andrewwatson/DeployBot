@@ -1,7 +1,6 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -90,21 +89,24 @@ func main() {
 			return
 		}
 
-		userCommand := r.FormValue("text")
+		// userCommand := r.FormValue("text")
 
-		data := struct {
-			Text           string
-			AttachmentText string
-		}{userCommand, userCommand}
-		tmpl, err := template.New("json").Parse(responseTemplate)
-		if err != nil {
-			http.Error(w, "Template Problem", http.StatusInternalServerError)
-			return
-		}
+		respondToSlack(responseURL, "Deployment Queued", "Your Deployment has been Queued Up.  Stay Tuned!")
+		// data := struct {
+		// 	Text           string
+		// 	AttachmentText string
+		// }{userCommand, userCommand}
+		// tmpl, err := template.New("json").Parse(responseTemplate)
+		// if err != nil {
+		// 	http.Error(w, "Template Problem", http.StatusInternalServerError)
+		// 	return
+		// }
 
-		w.Header().Add("Content-type", "application/json")
-		tmpl.Execute(w, data)
+		// w.Header().Add("Content-type", "application/json")
+		// tmpl.Execute(w, data)
 		log.Println("responded immediately")
+
+		w.WriteHeader(http.StatusOK)
 
 		if responseURL != "" {
 			go performDeployment("AAAA", "staging", responseURL)
