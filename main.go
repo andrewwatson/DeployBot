@@ -77,31 +77,21 @@ func main() {
 			return
 		}
 
-		/*
-		   {
-		       "response_type": "in_channel",
-		       "text": "It's 80 degrees right now.",
-		       "attachments": [
-		           {
-		               "text":"Partly cloudy today and tomorrow"
-		           }
-		       ]
-		   }
-		*/
+		userCommand := r.FormValue("text")
 
 		responseTemplate := `{
     "response_type": "in_channel",
-    "text": "{{.Text}}",
+    "text": "Your Request was {{.Command}}",
     "attachments": [
         {
-            "text":"{{.Text}}"
+            "text":"So I did {{.Command}}"
         }
     ]
 }`
 
 		data := struct {
-			Text string
-		}{"Test"}
+			Command string
+		}{userCommand}
 		tmpl, err := template.New("json").Parse(responseTemplate)
 		if err != nil {
 			http.Error(w, "Template Problem", http.StatusInternalServerError)
