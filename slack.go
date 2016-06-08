@@ -7,12 +7,30 @@ import (
 	"text/template"
 )
 
-func respondToSlack(responseURL, title, message string) ([]byte, error) {
+const (
+	responseTemplate = `{
+	"response_type": "{{.Type}}",
+	"text": "{{.Text}}",
+	"attachments": [
+		{
+				"text":"{{.AttachmentText}}"
+		}
+	]
+}`
+)
+
+func respondToSlack(responseURL, title, message string, ephemeral bool) ([]byte, error) {
+
+	rType := "in_channel"
+	if ephemeral {
+		rType = "ephemeral"
+	}
 
 	data := struct {
 		Text           string
 		AttachmentText string
-	}{title, message}
+		Type           string
+	}{title, message, rType}
 	tmpl, err := template.New("json").Parse(responseTemplate)
 	if err != nil {
 		return nil, err

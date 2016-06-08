@@ -14,18 +14,6 @@ var (
 	slackToken, slackChannel, slackTeam string
 )
 
-const (
-	responseTemplate = `{
-	"response_type": "in_channel",
-	"text": "{{.Text}}",
-	"attachments": [
-		{
-				"text":"{{.AttachmentText}}"
-		}
-	]
-}`
-)
-
 func init() {
 	router = mux.NewRouter()
 
@@ -91,7 +79,7 @@ func main() {
 
 		// userCommand := r.FormValue("text")
 
-		respondToSlack(responseURL, "Deployment Queued", "Your Deployment has been Queued Up.  Stay Tuned!")
+		// respondToSlack(responseURL, "Deployment Queued", "Your Deployment has been Queued Up.  Stay Tuned!")
 		// data := struct {
 		// 	Text           string
 		// 	AttachmentText string
@@ -107,7 +95,7 @@ func main() {
 		log.Println("responded immediately")
 
 		w.WriteHeader(http.StatusOK)
-
+		w.Write([]byte("Your request has been queued"))
 		if responseURL != "" {
 			go performDeployment("AAAA", "staging", responseURL)
 		}
