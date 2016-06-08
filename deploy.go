@@ -31,7 +31,7 @@ func performDeployment(version string, environment string, responseURL string) (
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", responseURL, bytes.NewBuffer(jsonOutput))
+	req, err := http.NewRequest("POST", responseURL, bytes.NewBuffer(jsonOutput.Bytes()))
 
 	if err != nil {
 		return nil, err
