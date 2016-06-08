@@ -13,3 +13,16 @@ $ go build *.go -o deploybot
 ```
 
 ## Running
+
+You'll need to set the following ENV for DeployBot to be able to authenticate incoming hooks
+```
+SLACK_TOKEN     you get this from Slack when you create the Outgoing Webhooks
+SLACK_TEAM      this is the name of the team, not the ID
+SLACK_CHANNEL   this is the human name for the channel the hook will be allowed from, not the ID
+```
+
+Export those and then just run the bot
+
+```
+$ ./deploybot
+```
