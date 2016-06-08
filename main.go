@@ -15,6 +15,18 @@ var (
 	slackToken, slackChannel, slackTeam string
 )
 
+const (
+	responseTemplate = `{
+	"response_type": "in_channel",
+	"text": "{{.Text}}",
+	"attachments": [
+		{
+				"text":"{{.AttachmentText}}"
+		}
+	]
+}`
+)
+
 func init() {
 	router = mux.NewRouter()
 
@@ -79,19 +91,10 @@ func main() {
 
 		userCommand := r.FormValue("text")
 
-		responseTemplate := `{
-    "response_type": "in_channel",
-    "text": "Your Request was {{.Command}}",
-    "attachments": [
-        {
-            "text":"So I did {{.Command}}"
-        }
-    ]
-}`
-
 		data := struct {
-			Command string
-		}{userCommand}
+			Text           string
+			AttachmentText string
+		}{userCommand, userCommand}
 		tmpl, err := template.New("json").Parse(responseTemplate)
 		if err != nil {
 			http.Error(w, "Template Problem", http.StatusInternalServerError)
@@ -115,5 +118,6 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
+	log.Printf("Listening on %s", ":8080")
 	log.Fatal(httpServer.ListenAndServe())
 }
