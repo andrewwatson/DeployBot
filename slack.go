@@ -19,12 +19,12 @@ const (
 }`
 )
 
-func respondToSlack(responseURL, title, message string, ephemeral bool) ([]byte, error) {
+func respondToSlack(responseURL, title, message string) ([]byte, error) {
 
 	rType := "in_channel"
-	if ephemeral {
-		rType = "ephemeral"
-	}
+	// if ephemeral {
+	// 	rType = "ephemeral"
+	// }
 
 	data := struct {
 		Text           string
